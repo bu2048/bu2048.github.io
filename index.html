@@ -1,0 +1,418 @@
+
+<!--
+
+We ripped this code off from Gabriele Cirulli, who was nice enough
+to MIT-license it. Thank you!
+
+Therefore, these resulting games are also MIT-licensed, APART FROM:
+
+THE UVT SHARING CODE, which is pulled in from elsewhere
+and which we can't MIT license.
+ANY IMAGES SUPPLIED BY OUR USERS, which should be hosted on
+imgur or similar and appropriately licensed.
+
+Love, UsVsTh3m
+
+
+And now, here is 2048 as the Fonz jumping the shark:
+
+           2048 --
+           /|\ --
+         __/_\__  --
+
+
+                        ____
+                       |    --__
+           /|          |        --__
+~~~~~~~~~~/ |~~~~~~~~~~|            --~~~~~~~~~~~
+
+
+
+The MIT License (MIT)
+
+Copyright (c) 2014 Gabriele Cirulli
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<script type='text/javascript'>var _sf_startpt=(new Date()).getTime()</script>
+
+  <title>2048: BostonUniversity Edition</title>
+  <base href="http://usvsth3m.co.uk/2048/">
+  <meta name="description" content="A custom version of 2048, the addictive tile-matching game."> 
+  <link href="/2048/style/main.css" rel="stylesheet" type="text/css">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <link rel="icon" href="http://images.icnetwork.co.uk/collections/usvsth3m/favicon.ico"> 
+  <link rel="image_src" href="http://games.usvsth3m.com/2048/intro.jpg">
+  <meta property="og:image" content="http://games.usvsth3m.com/2048/intro.jpg" />
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+  
+  <script src="http://static.usvsth3m.com/wrapper/wrapper.js"></script>
+  <link rel="stylesheet" href="http://static.usvsth3m.com/wrapper/wrapper.css">
+
+<style>
+  
+  .tile-text {
+    display:inline-block;
+    vertical-align: middle;
+  }
+  
+  /* lol !important */
+  
+  .tile-inner { background-position: center center !important; background-size: cover !important; background-repeat: no-repeat !important; }
+
+
+    
+    .tile-2 .tile-inner {
+      background-image: url(http://i.imgur.com/eTVIIcM.jpg) !important; 
+    }
+  
+    
+    .tile-4 .tile-inner {
+      background-image: url(http://i.imgur.com/5mk9WvU.jpg) !important; 
+    }
+  
+    
+    .tile-8 .tile-inner {
+      background-image: url(http://i.imgur.com/8CHat61.jpg) !important; 
+    }
+  
+    
+    .tile-16 .tile-inner {
+      background-image: url(http://i.imgur.com/BmWAb94.jpg) !important; 
+    }
+  
+    
+    .tile-32 .tile-inner {
+      background-image: url(http://i.imgur.com/eaSsAAP.jpg) !important; 
+    }
+  
+    
+    .tile-64 .tile-inner {
+      background-image: url(http://i.imgur.com/toRhtuu.jpg) !important; 
+    }
+  
+    
+    .tile-128 .tile-inner {
+      background-image: url(http://i.imgur.com/wEEbA2Y.jpg) !important; 
+    }
+  
+    
+    .tile-256 .tile-inner {
+      background-image: url(http://i.imgur.com/df9yntk.jpg) !important; 
+    }
+  
+    
+    .tile-512 .tile-inner {
+      background-image: url(http://i.imgur.com/BcEIphY.jpg) !important; 
+    }
+  
+    
+    .tile-1024 .tile-inner {
+      background-image: url(http://i.imgur.com/nlYCYJp.jpg) !important; 
+    }
+  
+    
+    .tile-2048 .tile-inner {
+      background-image: url(http://i.imgur.com/bAaM8iO.jpg) !important; 
+    }
+  
+    
+  
+  .thisistext, p, a, h1 { color: #776e65; }
+  .game-container { background-color: #a9d5b2 }
+  
+  
+  .preload, .preload img { position: absolute; top: -100px; -left: 100px; width: 1px; height: 1px; overflow: hidden; }
+  
+  #fix { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; position: fixed; z-index: -1000; 
+            
+        background-color: #faf8ef;
+      
+        }
+
+</style>
+
+  
+<script>
+// GLOBALS, GLOBALS, BODGE ALL THE GLOBALS
+var external_score; 
+var tile_contents = ["","","","","","","","","","","",""];
+
+var external_score; // yep, this is a bodge
+
+function tweet() {
+  
+  var tweet = {};
+  tweet.message='I scored ' + external_score + " in 2048: BostonUniversity Edition! Can you beat me? #bu2048 " ;
+  tweet.url="http://games.usvsth3m.com/2048/bostonuniversity-edition/";
+  UVT.sharing.twitter(tweet);
+
+}
+
+function facebook() {
+
+  var fbmsg = {};
+  fbmsg.title='I scored ' + external_score + " in 2048: BostonUniversity Edition! Can you beat me?" ;
+  fbmsg.message="Make your own versions of addictive slidey-puzzle game 2048.";
+  fbmsg.url="http://games.usvsth3m.com/2048/bostonuniversity-edition/";
+  fbmsg.picture="http://games.usvsth3m.com/2048/intro.jpg";
+  UVT.sharing.facebook(fbmsg);
+
+}
+
+function resizeTextOn(whichelement) {
+
+  $(whichelement + " .tile-inner").css("display", "block");
+  $(whichelement + " .tile-text").css("display", "inline-block");
+
+  $(whichelement + " .tile-text").css("fontSize", "60px");
+
+  while ($(whichelement + " .tile-text").width()+30 > $(whichelement + " .tile-inner").width()) {
+    var newSize = (parseInt($(whichelement + " .tile-text").css("fontSize")) - 1) + "px";
+    $(whichelement + " .tile-text").css("fontSize", newSize);
+  }
+
+  if (typeof newSize == "undefined") { var newSize = "100px"; }
+
+  $(whichelement + " .tile-text").css("lineHeight", newSize);
+
+  if (parseInt(newSize) > 50) {
+    $(whichelement + " .tile-text").css("position", "relative");
+    $(whichelement + " .tile-text").css("top", "5px");
+  } else {
+    $(whichelement + " .tile-text").css("position", "relative");
+    $(whichelement + " .tile-text").css("top", "0px");
+  }
+
+  $(whichelement + " .tile-inner").css("display", "table");
+  $(whichelement + " .tile-text").css("display", "table-cell");
+
+}
+
+
+</script>
+
+<style>
+@media (min-width: 800px) {
+  .sharer {
+         -moz-column-count: 2;
+         -moz-column-gap: 20px;
+         -webkit-column-count: 2;
+         -webkit-column-gap: 20px;
+         
+  }
+  .sharer a { color: #0000cc; }
+}
+@media (max-width: 800px) {
+  .sharer {
+    padding: 0 10px;
+  }
+  .sharer a { color: #0000cc; }
+}
+
+</style>
+</head>
+<body>
+
+  <div id="fix"></div>
+  <div class="container">
+    <div class="heading">
+      <div id="makeyourown"><a href="http://games.usvsth3m.com/2048/">Make your own 2048!</a></div>
+      <h1 class="title thisistext">2048:<br>BostonUniversity Edition</h1>
+            <p id="credit">by Pop</p>
+      
+      <div class="scores-container">
+        <div class="score-container">0</div>
+        <div class="best-container">0</div>
+      </div>
+    </div>
+
+    <div class="game-container">
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+          <a class="tweet">Tweet your score</a>
+          <a class="facebook">Share on Facebook</a>
+          <a class="retry-button">Try again</a>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+      </div>
+
+      <div class="tile-container">
+
+      </div>
+    </div>
+
+    <p class="game-explanation">
+      <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles.<br>When two identical tiles touch, they merge and become the next level of tile. Get a tile to the eleventh level to win.
+    </p>
+    <hr>
+    
+    <div class="sharer">
+    
+      <div>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-related="usvsth3m" data-dnt="true">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      </div>
+        <div class="fb-like"  data-width="240" data-height="40" data-layout="standard" data-action="like" data-show-faces="false" data-send="false"></div>  
+    </div>
+    <div class="sharer">
+      <div>
+        <a target="_blank" href="http://sc.reddit.com/submit" onclick="window.location = 'http://sc.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> <img src="http://sc.reddit.com/static/spreddit11.gif" alt="submit to reddit" border="0" /> </a>
+      </div>
+      <div>
+        <a target="_blank" href="http://service.weibo.com/share/share.php?url=http://games.usvsth3m.com/2048/bostonuniversity-edition/&appkey=&title=2048: BostonUniversity Edition&pic=&ralateUid=&language=zh_cn"><img src="/2048/share_button_l.gif" height="32" width="142" alt="Share on Weibo"></a>
+      </div>
+      
+    </div>
+    
+    <hr>
+    <p>
+    A complete ripoff of <a href="http://gabrielecirulli.com" target="_blank">Gabriele Cirulli</a>'s MIT-licensed <a href="http://gabrielecirulli.github.io/2048/">2048</a>, which was based on <a href="https://itunes.apple.com/us/app/1024!/id823499224" target="_blank">1024 by Veewo Studio</a> and conceptually similar to <a href="http://asherv.com/threes/" target="_blank">Threes by Asher Vollmer</a>. All the words and images you see have been supplied by our users.
+    </p>
+    
+  </div>
+  
+
+  <script src="/2048/js/glom.js"></script>
+  
+
+  <div class="preload">
+  <img src="http://i.imgur.com/eTVIIcM.jpg" class="preload"><img src="http://i.imgur.com/5mk9WvU.jpg" class="preload"><img src="http://i.imgur.com/8CHat61.jpg" class="preload"><img src="http://i.imgur.com/BmWAb94.jpg" class="preload"><img src="http://i.imgur.com/eaSsAAP.jpg" class="preload"><img src="http://i.imgur.com/toRhtuu.jpg" class="preload"><img src="http://i.imgur.com/wEEbA2Y.jpg" class="preload"><img src="http://i.imgur.com/df9yntk.jpg" class="preload"><img src="http://i.imgur.com/BcEIphY.jpg" class="preload"><img src="http://i.imgur.com/nlYCYJp.jpg" class="preload"><img src="http://i.imgur.com/bAaM8iO.jpg" class="preload">  </div>
+  
+<!-- UVT Sharing and Analytics for Interactives -->
+
+    <div id="fb-root"></div>
+    <script src="http://static.usvsth3m.com/js/unified-sharing.js"></script>
+
+    <script type='text/javascript'>
+        var _sf_async_config={};
+        /** CONFIGURATION START **/
+        _sf_async_config.uid = 33715;
+        _sf_async_config.domain = 'usvsth3m.tumblr.com';
+        _sf_async_config.useCanonical = true;
+        _sf_async_config.sections = 'Change this to your Section name';  //CHANGE THIS
+        _sf_async_config.authors = 'Change this to your Author name';    //CHANGE THIS
+        /** CONFIGURATION END **/
+        (function(){
+          function loadChartbeat() {
+            window._sf_endpt=(new Date()).getTime();
+            var e = document.createElement('script');
+            e.setAttribute('language', 'javascript');
+            e.setAttribute('type', 'text/javascript');
+            e.setAttribute('src', '//static.chartbeat.com/js/chartbeat.js');
+            document.body.appendChild(e);
+          }
+          var oldonload = window.onload;
+          window.onload = (typeof window.onload != 'function') ?
+          loadChartbeat : function() { oldonload(); loadChartbeat(); };
+        })();
+        
+
+  window.fbAsyncInit = function() {
+    // init the FB JS SDK
+    FB.init({
+      appId      : '383984258388383',                        // App ID from the app dashboard
+      channelUrl : '//games.usvsth3m.com/channel.html', // Channel file for x-domain comms
+      status     : true,                                 // Check Facebook Login status
+      xfbml      : true                                  // Look for social plugins on the page
+    });
+
+    // Additional initialization code such as adding Event Listeners goes here
+  };
+        
+    </script>
+
+    <!-- SiteCatalyst Code -->
+    <script type="text/JavaScript"><!--
+    //var s_account = "tmrmirrordeveloper";
+    var s_account = "tmrusvsthem,tmrgroupaggregateprod";
+    var s_omnitureDNSAlias = "trinitymirror.112.2o7.net";
+    //--></script>
+    <script language="JavaScript" type="text/javascript" src="http://s.mirror.co.uk/resources/js/s_code.js"></script>
+    <script language="JavaScript" type="text/javascript"><!--
+    s.pageName ="us vs th3m:"+document.title;
+    s.prop5 ="us vs th3m";
+    s.prop1=document.location.host;
+    s.eVar40=document.location.host;
+    s.prop16="MGN5";
+    s.prop21="MGN2";
+    var s_code=s.t();if(s_code)document.write(s_code)//--></script>
+    <script language="JavaScript" type="text/javascript"><!--
+    if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+    //--></script><noscript><img src="http://trinitymirror.112.2o7.net/b/ss/tmrusvsthem,tmrmgnthreeaggprod/1/H.25.2--NS/0?[AQB]&cdp=3&[AQE]"
+    height="1" width="1" border="0" alt="" /></noscript>
+
+<!-- End UVT Sharing -->
+
+<!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-41743203-2', 'bu2048.github.io');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+<!-- Cached, generated in 0.0011599063873291 seconds -->
